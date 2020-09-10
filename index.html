@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Personal Stylesheet -->
+    <link rel="stylesheet" href="./styles/normalize.css">
+    <link rel="stylesheet" href="./styles/main.css">
+    <title>TicTacToe</title>
+</head>
+<body>
+    <main class="container">
+        <div class="home-screen">
+            <h2 class="home-screen__logo">Tic Tac Toe</h2>
+            <div class="home-screen__btns">
+                <button class="btn home-screen__btn home-screen__btn--active">Single</button>
+                <button class="btn home-screen__btn home-screen__btn--active">V S</button>
+            </div>
+        </div>
+        <div class="begin-screen">
+            <button class="btn begin-screen__btn begin-screen__btn--back">❮</button>
+            <div class="begin-screen__greeting">
+                <span class="begin-screen__msg">you shall not defeat o</span>
+                <input type="text" placeholder="player x"class="begin-screen__input" data-player="x"/>
+                <input type="text" placeholder="player o"class="begin-screen__input" data-player="o"/>
+            </div>
+            <button class="btn begin-screen__btn begin-screen__btn--login">login</button>
+
+        </div>
+        <div class="play-screen">
+            <div class="play-screen__board">
+                <span class="play-screen__board-cell" data-cell-number=1>&nbsp;</span>
+                <span class="play-screen__board-cell" data-cell-number=2>&nbsp;</span>
+                <span class="play-screen__board-cell" data-cell-number=3>&nbsp;</span>
+                <span class="play-screen__board-cell" data-cell-number=4>&nbsp;</span>
+                <span class="play-screen__board-cell" data-cell-number=5>&nbsp;</span>
+                <span class="play-screen__board-cell" data-cell-number=6>&nbsp;</span>
+                <span class="play-screen__board-cell" data-cell-number=7>&nbsp;</span>
+                <span class="play-screen__board-cell" data-cell-number=8>&nbsp;</span>
+                <span class="play-screen__board-cell" data-cell-number=9>&nbsp;</span>
+            </div>
+        </div>
+        <div class="end-screen">
+            <span class="end-screen__msg">thanks for playing</span>
+            <div class="end-screen__btns">
+                <button class="btn end-screen__btn end-screen__btn--active">rematch</button>
+                <button class="btn end-screen__btn end-screen__btn--active">logout</button>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
