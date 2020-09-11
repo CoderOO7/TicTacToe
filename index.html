@@ -13,19 +13,18 @@
         <div class="home-screen">
             <h2 class="home-screen__logo">Tic Tac Toe</h2>
             <div class="home-screen__btns">
-                <button class="btn home-screen__btn home-screen__btn--active">Single</button>
-                <button class="btn home-screen__btn home-screen__btn--active">V S</button>
+                <button class="btn home-screen__btn home-screen__btn--active" id="single-pl-btn">Single</button>
+                <button class="btn home-screen__btn home-screen__btn--active" id="multi-pl-btn">V S</button>
             </div>
         </div>
         <div class="begin-screen">
-            <button class="btn begin-screen__btn begin-screen__btn--back">❮</button>
+            <button class="btn begin-screen__btn begin-screen__btn--back" id="back-btn">❮</button>
             <div class="begin-screen__greeting">
                 <span class="begin-screen__msg">you shall not defeat o</span>
-                <input type="text" placeholder="player x"class="begin-screen__input" data-player="x"/>
-                <input type="text" placeholder="player o"class="begin-screen__input" data-player="o"/>
+                <input type="text" placeholder="player x" class="begin-screen__input" id="p1-input" data-player="x"/>
+                <input type="text" placeholder="player o" class="begin-screen__input" id="p2-input" data-player="o"/>
             </div>
-            <button class="btn begin-screen__btn begin-screen__btn--login">login</button>
-
+            <button class="btn begin-screen__btn begin-screen__btn--login" id="login-btn">login</button>
         </div>
         <div class="play-screen">
             <div class="play-screen__board">
@@ -43,10 +42,12 @@
         <div class="end-screen">
             <span class="end-screen__msg">thanks for playing</span>
             <div class="end-screen__btns">
-                <button class="btn end-screen__btn end-screen__btn--active">rematch</button>
-                <button class="btn end-screen__btn end-screen__btn--active">logout</button>
+                <button class="btn end-screen__btn end-screen__btn--active" id="rematch-btn">rematch</button>
+                <button class="btn end-screen__btn end-screen__btn--active" id="logout-btn">logout</button>
             </div>
         </div>
     </main>
+
+    <script type="module" src="./scripts/game.js" defer></script>
 </body>
 </html>
