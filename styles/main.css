@@ -97,7 +97,6 @@ body{
     height: 46vh;
     margin: 0 auto;
     padding: 5.5vh 4vh 7.5vh 4vh;
-    font-family: 'Courier New', Courier, monospace;
     font-size: 4.5vh;
     line-height: 4.5vh;
     text-align: center;
@@ -178,3 +177,6 @@ body{
     border: 0.4vh dotted var(--main-color);
 }
 
+.hide-screen{
+    display: none;
+}
