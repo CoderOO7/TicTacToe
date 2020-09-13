@@ -11,6 +11,10 @@ const gameBoard = (function(doc){
 
   const _isEmpty = (cell) => (cell === null ? true : false);
 
+  function emptyBoardArray(){
+    boardArray.fill(null);
+  }
+
   function updateCell(index, marker) {
     const cell = boardArray[index];
     if (_isEmpty(cell)) {
@@ -23,6 +27,7 @@ const gameBoard = (function(doc){
   return {
       get,
       getBoardArray,
+      emptyBoardArray,
       updateCell
   }
 })(document);

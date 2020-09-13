@@ -31,6 +31,7 @@ const displayController = (function (doc) {
         endScreen.classList.add("hide-screen");
         playScreen.classList.remove("hide-screen");
       }else if(this === logoutBtn){
+        _setPlayersNameAlias();
         endScreen.classList.add("hide-screen");
         homeScreen.classList.remove("hide-screen");
       }else if(this === loginBtn){
@@ -45,7 +46,7 @@ const displayController = (function (doc) {
   }
 
   function _activateButtons() {
-    singlePlayerBtn.addEventListener("click",_handleScreenBtnClick.bind(singlePlayerBtn),false);
+    singlePlayerBtn.addEventListener("click", _handleScreenBtnClick.bind(singlePlayerBtn), false);
     multiPlayerBtn.addEventListener("click", _handleScreenBtnClick.bind(multiPlayerBtn), false);
     rematchBtn.addEventListener("click", _handleScreenBtnClick.bind(rematchBtn), false);
     logoutBtn.addEventListener("click", _handleScreenBtnClick.bind(logoutBtn), false);
@@ -65,6 +66,11 @@ const displayController = (function (doc) {
     gameSettings.player2Name = player2NameInput.value;
   }
 
+  function _setPlayersNameAlias(){
+    player1NameInput.value = player1NameInput.placeholder;
+    player2NameInput.value = player2NameInput.placeholder;
+  }
+
   function _setGameMode(){
     if(this === singlePlayerBtn){
         GAME_MODE = 'single_player';
@@ -76,6 +82,14 @@ const displayController = (function (doc) {
 
   function _getGameMode(){
       return GAME_MODE;
+  }
+
+  function clearBoard(){
+    const boardCells = doc.querySelectorAll(".play-screen__board-cell");
+  
+    for (let i = 0; i < boardCells.length; i++) {
+      boardCells[i].textContent = '\u00A0';
+    }
   }
 
   function render() {
@@ -99,8 +113,7 @@ const displayController = (function (doc) {
   }
 
   (function () {
-    player1NameInput.value = "PLAYER X";
-    player2NameInput.value = "PLAYER O";
+    _setPlayersNameAlias();
     _activateButtons();
     _hideScreenAtStartup();
   })();
@@ -108,6 +121,7 @@ const displayController = (function (doc) {
   return {
     getGameSettings,
     switchToEndScreen,
+    clearBoard,
     render,
   };
 })(document);

@@ -10,6 +10,7 @@ const gameController = (function () {
 
   let player1 = null;
   let player2 = null;
+  let isWinnerFound = false;
 
   function _initPlayers() {
     const gameSettings = displayController.getGameSettings();
@@ -104,23 +105,34 @@ const gameController = (function () {
   }
 
   function _isGameOver(marker) {
-    return _isPlayerWin(marker) || _isGameTie();
+    return _isPlayerWin(marker) ? isWinnerFound = true : _isGameTie();
+  }
+
+  function _resetGameParams(){
+    player1 = null;
+    player2 = null;
+    isWinnerFound = false;
+  }
+
+  function _initGameEnd(player){
+    if (isWinnerFound) {
+      alert(`${player.name} win the game`);
+    } else {
+      alert(`Tie, try again later`);
+    }
+    _resetGameParams();
+    gameBoard.emptyBoardArray();
+    displayController.clearBoard();
+    displayController.switchToEndScreen();
   }
 
   function _executePlay(player, cellIndex) {
     const isCellUpdated = gameBoard.updateCell(cellIndex, player.marker);
-    console.log(displayController.getGameSettings().player1Name);
 
     if (isCellUpdated) {
       displayController.render();
       if (_isGameOver(player.marker)) {
-        if (_isPlayerWin(player.marker)) {
-          alert(`${player.name} win the game`);
-        } else if (_isGameTie()) {
-          alert(`Tie, try again later`);
-        }
-        _disableBoardClick();
-        displayController.switchToEndScreen();
+        _initGameEnd(player);        
       } else {
         _changePlayerTurn();
       }
@@ -139,7 +151,7 @@ const gameController = (function () {
   function _handleBoardClick(event) {
     if (!_isGameSettingAvailable()) return;
     const cellClicked = event.target.closest(".play-screen__board-cell");
-    if (cellClicked) {
+    if (cellClicked && !isWinnerFound) {
       const cellIndex = event.target.getAttribute("data-cell-number") - 1;
       const player = _getPlayerTurn();
       _executePlay(player, cellIndex);
