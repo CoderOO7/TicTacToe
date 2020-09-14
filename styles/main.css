@@ -160,6 +160,12 @@ body{
     cursor: pointer;
 }
 
+.play-screen{
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+}
+
 .play-screen__board{
     display: grid;
     grid-template-columns: repeat(3,1fr);
@@ -177,6 +183,6 @@ body{
     border: 0.4vh dotted var(--main-color);
 }
 
-.hide-screen{
+.screen--hide{
     display: none;
 }

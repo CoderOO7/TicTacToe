@@ -10,12 +10,14 @@ const gameController = (function () {
 
   let player1 = null;
   let player2 = null;
+  let isComputerOpponent = false;
   let isWinnerFound = false;
 
   function _initPlayers() {
     const gameSettings = displayController.getGameSettings();
     player1 = playerFactory(gameSettings.player1Name, "X", true);
     player2 = playerFactory(gameSettings.player2Name, "O", false);
+    isComputerOpponent = gameSettings.gameMode === 'single_player' ? true: false;
   }
 
   const _isPlayerTurn = (player) => player.isMyTurn;
@@ -35,6 +37,23 @@ const gameController = (function () {
     } else {
       player1.isMyTurn = true;
       player2.isMyTurn = false;
+    }
+  }
+
+  
+  function _getComputerMove(){
+    const boardArray = gameBoard.getBoardArray();
+    return Math.floor(Math.random()* boardArray.length);
+  }
+  
+  const _isComputerMoveValid = (index) => gameBoard.getBoardArray()[index] === null;   
+
+  function _computerTurn(){
+    const cellIndex = _getComputerMove();
+    if(_isComputerMoveValid(cellIndex)){
+      return _executePlay(player2,cellIndex);
+    }else{
+      _computerTurn();
     }
   }
 
@@ -111,6 +130,7 @@ const gameController = (function () {
   function _resetGameParams(){
     player1 = null;
     player2 = null;
+    isComputerOpponent = false;
     isWinnerFound = false;
   }
 
@@ -131,11 +151,12 @@ const gameController = (function () {
 
     if (isCellUpdated) {
       displayController.render();
+      _changePlayerTurn();
       if (_isGameOver(player.marker)) {
         _initGameEnd(player);        
-      } else {
-        _changePlayerTurn();
-      }
+      }else if(isComputerOpponent === true && _getPlayerTurn() === player2){
+        _computerTurn();
+      } 
     }
   }
 

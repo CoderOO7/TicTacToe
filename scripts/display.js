@@ -22,27 +22,27 @@ const displayController = (function (doc) {
   const gameSettings = {};
   let GAME_MODE = null;
 
-  function _handleScreenBtnClick(){
-      if(this === singlePlayerBtn || this === multiPlayerBtn){
-        _setGameMode.call(this);
-        homeScreen.classList.add("hide-screen");
-        beginScreen.classList.remove("hide-screen");
-      }else if(this === rematchBtn){
-        endScreen.classList.add("hide-screen");
-        playScreen.classList.remove("hide-screen");
-      }else if(this === logoutBtn){
-        _setPlayersNameAlias();
-        endScreen.classList.add("hide-screen");
-        homeScreen.classList.remove("hide-screen");
-      }else if(this === loginBtn){
-        _initGameSettings();
-        beginScreen.classList.add("hide-screen");
-        playScreen.classList.remove("hide-screen");
-      }else if(this === backBtn){
-        beginScreen.classList.add("hide-screen");
-        homeScreen.classList.remove("hide-screen");
-      }
-
+  function _handleScreenBtnClick() {
+    if (this === singlePlayerBtn || this === multiPlayerBtn) {
+      _setGameMode.call(this);
+      _styleInputDisplay();
+      homeScreen.classList.add("screen--hide");
+      beginScreen.classList.remove("screen--hide");
+    } else if (this === rematchBtn) {
+      endScreen.classList.add("screen--hide");
+      playScreen.classList.remove("screen--hide");
+    } else if (this === logoutBtn) {
+      _setPlayersNameAlias();
+      endScreen.classList.add("screen--hide");
+      homeScreen.classList.remove("screen--hide");
+    } else if (this === loginBtn) {
+      _initGameSettings();
+      beginScreen.classList.add("screen--hide");
+      playScreen.classList.remove("screen--hide");
+    } else if (this === backBtn) {
+      beginScreen.classList.add("screen--hide");
+      homeScreen.classList.remove("screen--hide");
+    }
   }
 
   function _activateButtons() {
@@ -54,10 +54,10 @@ const displayController = (function (doc) {
     backBtn.addEventListener("click", _handleScreenBtnClick.bind(backBtn), false);
   }
 
-  function _hideScreenAtStartup(){
-    beginScreen.classList.add("hide-screen");
-    playScreen.classList.add("hide-screen");
-    endScreen.classList.add("hide-screen");
+  function _hideScreenAtStartup() {
+    beginScreen.classList.add("screen--hide");
+    playScreen.classList.add("screen--hide");
+    endScreen.classList.add("screen--hide");
   }
 
   function _initGameSettings() {
@@ -66,29 +66,39 @@ const displayController = (function (doc) {
     gameSettings.player2Name = player2NameInput.value;
   }
 
-  function _setPlayersNameAlias(){
+  function _setPlayersNameAlias() {
     player1NameInput.value = player1NameInput.placeholder;
     player2NameInput.value = player2NameInput.placeholder;
   }
 
-  function _setGameMode(){
-    if(this === singlePlayerBtn){
-        GAME_MODE = 'single_player';
-    }
-    else if(this === multiPlayerBtn){
-        GAME_MODE = 'multi_player';
+  function _setGameMode() {
+    if (this === singlePlayerBtn) {
+      GAME_MODE = "single_player";
+    } else if (this === multiPlayerBtn) {
+      GAME_MODE = "multi_player";
     }
   }
 
-  function _getGameMode(){
-      return GAME_MODE;
+  function _getGameMode() {
+    return GAME_MODE;
   }
 
-  function clearBoard(){
+  function clearBoard() {
     const boardCells = doc.querySelectorAll(".play-screen__board-cell");
-  
+
     for (let i = 0; i < boardCells.length; i++) {
-      boardCells[i].textContent = '\u00A0';
+      boardCells[i].textContent = "\u00A0";
+    }
+  }
+
+  function _styleInputDisplay() {
+    if (_getGameMode() === "single_player") {
+      player1NameInput.style.top = "40%";
+      player2NameInput.style.display = "none";
+    }else{
+      // reset to default value
+      player1NameInput.style.top = "";
+      player2NameInput.style.display = ""; 
     }
   }
 
@@ -107,9 +117,9 @@ const displayController = (function (doc) {
     return gameSettings;
   }
 
-  function switchToEndScreen(){
-    playScreen.classList.add("hide-screen");
-    endScreen.classList.remove("hide-screen");
+  function switchToEndScreen() {
+    playScreen.classList.add("screen--hide");
+    endScreen.classList.remove("screen--hide");
   }
 
   (function () {
