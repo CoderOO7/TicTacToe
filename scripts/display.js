@@ -7,8 +7,8 @@ const displayController = (function (doc) {
   const playScreen = doc.querySelector(".play-screen");
   const endScreen = doc.querySelector(".end-screen");
 
-  const beginScreeMsgDisplay = doc.getElementsByClassName("begin-screen__msg");
-  const endScreenMsgDisplay = doc.getElementsByClassName("end-screen__msg");
+  const beginScreenMsgDisplay = doc.getElementsByClassName("begin-screen__msg")[0];
+  const endScreenMsgDisplay = doc.getElementsByClassName("end-screen__msg")[0];
 
   const player1NameInput = doc.getElementById("p1-name");
   const player2NameInput = doc.getElementById("p2-name");
@@ -21,11 +21,13 @@ const displayController = (function (doc) {
 
   const gameSettings = {};
   let GAME_MODE = null;
+  let timeoutIdsBucket = [];
 
   function _handleScreenBtnClick() {
     if (this === singlePlayerBtn || this === multiPlayerBtn) {
       _setGameMode.call(this);
       _styleInputDisplay();
+      _displayWelcomeMessage();
       homeScreen.classList.add("screen--hide");
       beginScreen.classList.remove("screen--hide");
     } else if (this === rematchBtn) {
@@ -40,6 +42,7 @@ const displayController = (function (doc) {
       beginScreen.classList.add("screen--hide");
       playScreen.classList.remove("screen--hide");
     } else if (this === backBtn) {
+      _clearTimeout();
       beginScreen.classList.add("screen--hide");
       homeScreen.classList.remove("screen--hide");
     }
@@ -54,6 +57,55 @@ const displayController = (function (doc) {
     backBtn.addEventListener("click", _handleScreenBtnClick.bind(backBtn), false);
   }
 
+  function _typeWriter(textArray, targetElement){
+    let display = targetElement;
+    textArray.forEach((frame, index) => {
+      let add = (index === 0) ? 750 : 1725 * (index + 1);
+      let line = frame.split('');
+      let lastMils = 0;
+
+      timeoutIdsBucket.push(setTimeout(() => {
+        display.textContent = '';
+      },add));
+
+      line.forEach((character) => {
+        console.log(character,display);
+        let milliseconds = Math.floor(Math.random() * 125);
+        timeoutIdsBucket.push(setTimeout(() => {
+          display.textContent += character;
+        }, milliseconds + lastMils + add + 120));
+        lastMils += milliseconds;       
+      });
+    })
+  }
+
+  function _displayWelcomeMessage(){
+    if(_getGameMode() === 'single_player'){
+      let text = [
+        'hello, PLAYER X',
+        'my name is O',
+        'enter an alias below',
+        'or do not, PLAYER X',
+        'you shall not defeat O'
+      ];
+      _typeWriter(text,beginScreenMsgDisplay);
+    }else{
+      let text = [
+        'hello, PLAYER X',
+        'welcome, PLAYER O',
+        'enter an alias below',
+        'or do not, PLAYER X',
+        'will you, PLAYER O?',
+        '...login, play tic tac toe!'
+      ];
+      _typeWriter(text,beginScreenMsgDisplay);
+    }
+  }
+
+  function _clearTimeout(){
+    return timeoutIdsBucket.forEach(id=>{clearTimeout(id);});
+  }
+  
   function _hideScreenAtStartup() {
     beginScreen.classList.add("screen--hide");
     playScreen.classList.add("screen--hide");
@@ -62,13 +114,13 @@ const displayController = (function (doc) {
 
   function _initGameSettings() {
     gameSettings.gameMode = _getGameMode();
-    gameSettings.player1Name = player1NameInput.value;
-    gameSettings.player2Name = player2NameInput.value;
+    gameSettings.player1Name = player1NameInput.value.toUpperCase();
+    gameSettings.player2Name = player2NameInput.value.toUpperCase();
   }
 
   function _setPlayersNameAlias() {
-    player1NameInput.value = player1NameInput.placeholder;
-    player2NameInput.value = player2NameInput.placeholder;
+    player1NameInput.value = player1NameInput.placeholder.toUpperCase();
+    player2NameInput.value = player2NameInput.placeholder.toUpperCase();
   }
 
   function _setGameMode() {
@@ -83,14 +135,6 @@ const displayController = (function (doc) {
     return GAME_MODE;
   }
 
-  function clearBoard() {
-    const boardCells = doc.querySelectorAll(".play-screen__board-cell");
-
-    for (let i = 0; i < boardCells.length; i++) {
-      boardCells[i].textContent = "\u00A0";
-    }
-  }
-
   function _styleInputDisplay() {
     if (_getGameMode() === "single_player") {
       player1NameInput.style.top = "40%";
@@ -99,6 +143,55 @@ const displayController = (function (doc) {
       // reset to default value
       player1NameInput.style.top = "";
       player2NameInput.style.display = ""; 
+    }
+  }
+
+  function _showMatrixRain() {
+    // Initialising the canvas
+    let canvas = document.querySelector(".canvas");
+    let ctx = canvas.getContext("2d");
+
+    // Setting the width and height of the canvas
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Setting up the letters
+    let letters = "loveyouoye";
+    letters = letters.split("");
+
+    // Setting up the columns
+    let fontSize = 14;
+    let columns = canvas.width / fontSize;
+
+    // Setting up the drops
+    var drops = [];
+    for (var i = 0; i < columns; i++) {
+      drops[i] = 1;
+    }
+
+    // Setting up the draw function
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, .1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      for (var i = 0; i < drops.length; i++) {
+        var text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillStyle = "#0f0";
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        drops[i]++;
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.95) {
+          drops[i] = 0;
+        }
+      }
+    }
+    // Loop the animation
+    setInterval(draw, 60);
+  }
+
+  function clearBoard() {
+    const boardCells = doc.querySelectorAll(".play-screen__board-cell");
+
+    for (let i = 0; i < boardCells.length; i++) {
+      boardCells[i].textContent = "\u00A0";
     }
   }
 
@@ -122,13 +215,20 @@ const displayController = (function (doc) {
     endScreen.classList.remove("screen--hide");
   }
 
+  function displayGameEndMessage(text){
+    let textArr = [text];
+    _typeWriter(textArr, endScreenMsgDisplay);
+  }
+
   (function () {
+    _showMatrixRain();
     _setPlayersNameAlias();
     _activateButtons();
     _hideScreenAtStartup();
   })();
 
   return {
+    displayGameEndMessage,
     getGameSettings,
     switchToEndScreen,
     clearBoard,

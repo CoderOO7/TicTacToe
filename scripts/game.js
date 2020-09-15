@@ -135,15 +135,25 @@ const gameController = (function () {
   }
 
   function _initGameEnd(player){
+    let text = '';
     if (isWinnerFound) {
-      alert(`${player.name} win the game`);
-    } else {
-      alert(`Tie, try again later`);
+      if(isComputerOpponent){
+        if(player === player2){
+          text = `${player.name} Don't Cry`;
+        }else{
+          text = `${player1.name} You Are Genious`;
+        }
+      }else if(!isComputerOpponent){
+          text = `${player.name} You Win The Game`;
+      }
+    } else if(!isWinnerFound){
+      text = `it's totally scratch`;
     }
     _resetGameParams();
     gameBoard.emptyBoardArray();
     displayController.clearBoard();
     displayController.switchToEndScreen();
+    displayController.displayGameEndMessage(text);
   }
 
   function _executePlay(player, cellIndex) {
@@ -178,7 +188,7 @@ const gameController = (function () {
       _executePlay(player, cellIndex);
     }
   }
-
+  
   boardElement.addEventListener("click", _handleBoardClick, false);
 })();
 

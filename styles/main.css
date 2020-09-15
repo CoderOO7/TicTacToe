@@ -12,8 +12,13 @@
 }
 
 body{
-    background-color: var(--body-bg-color);
+    background-color: transparent;
     font-family: 'Courier New', Courier, monospace;
+}
+
+.canvas{
+    position: absolute;
+    z-index: -9999;
 }
 
 .btn{
@@ -24,7 +29,9 @@ body{
 .container{
     display: flex;
     flex-direction: column;
-    position: relative;
+    position: absolute;
+    left:50%;
+    transform: translate(-50%,0);
     color: var(--main-color);
 }
 
@@ -39,7 +46,9 @@ body{
 .home-screen,
 .begin-screen,
 .end-screen{
-    position: relative;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%,0);
     border-radius: 50%;
     height: 90vh;
     width: 90vh;
@@ -56,8 +65,8 @@ body{
     font-size: 10.5vh;
     width: 100%;
     text-align:center;
-    color: rgba(255, 235, 205, 0.8);
-    text-shadow: blanchedalmond 0px 0px 0.65rem;
+    color: var(--main-color);
+    text-shadow: var(--main-color) 0px 0px 0.65rem;
     text-transform: uppercase;
 }
 
@@ -76,15 +85,20 @@ body{
     color: var(--main-color);
     font-family: monospace;
     text-transform: lowercase;
-    border: 0.5vh dotted var(--main-color);
+    border: 0.4vh dotted var(--main-color);
     border-radius: 5vh 5vh 10vh 10vh;
+}
+
+.begin-screen__msg,
+.end-screen__msg{
+    text-shadow: .1em 0.1em 2vh var(--main-color)
 }
 
 .end-screen__msg{
     position: absolute;
     top: 48%;
     width: 100%;
-    font-size: 3vh;
+    font-size: 4vh;
     text-align: center;
 }
 
@@ -102,8 +116,8 @@ body{
     text-align: center;
     border-radius: 10vh;
     border: 1vh solid var(--main-color);
-    border-top: 0.5vh dotted var(--main-color);
-    border-bottom: 0.5vh dotted var(--main-color);
+    border-top: 0.3vh dotted var(--main-color);
+    border-bottom: 0.3vh dotted var(--main-color);
 }
 
 .begin-screen__input{
@@ -114,12 +128,12 @@ body{
     outline: none;
     padding: 2vw 4vw;
     border-radius: 10vw ;
-    border-left: 0.6em solid beige;
+    border-left: 0.6em solid var(--main-color);
     font-size: 7vh;
     background: none;
     align-self: center;
     color: var(--main-color);
-    text-shadow: 0 0 0.75vh burlywood;
+    text-shadow: 0 0 0.75vh var(--main-color);
     box-shadow: 0 0 10vh rgba(222,184,135,0.05) inset;
     text-transform: uppercase;
 }
@@ -133,6 +147,7 @@ body{
 
 .begin-screen__btn{
     border: none;
+    color: var(--main-color);
     background-color: transparent;
 }
 
@@ -142,7 +157,6 @@ body{
     width: 66vh;
     font-size: 8vh;
     align-self: center;
-    color: var(--main-color);
     text-shadow: 0 0 2vh var(--main-color);
     border-radius: 90vh 90vh 5vh 5vh;
 }
@@ -155,6 +169,7 @@ body{
     align-self: center;
     margin: 0 auto;
     font-size: 8vh;
+    font-weight: 600;
     border-radius: 5vh 5vh 50vh 50vh;
     text-shadow: 0 0 3vh blanchedalmond;
     cursor: pointer;
