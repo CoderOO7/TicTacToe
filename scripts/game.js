@@ -58,64 +58,9 @@ const gameController = (function () {
   }
 
   function _isPlayerWin(marker) {
-    const boardArray = gameBoard.getBoardArray();
-    if (
-      marker === boardArray[0] &&
-      boardArray[0] === boardArray[1] &&
-      boardArray[1] === boardArray[2]
-    ) {
-      return true;
-    }
-    if (
-      marker === boardArray[3] &&
-      boardArray[3] === boardArray[4] &&
-      boardArray[4] === boardArray[5]
-    ) {
-      return true;
-    }
-    if (
-      marker === boardArray[6] &&
-      boardArray[6] === boardArray[7] &&
-      boardArray[7] === boardArray[8]
-    ) {
-      return true;
-    }
-    if (
-      marker === boardArray[0] &&
-      boardArray[0] === boardArray[3] &&
-      boardArray[3] === boardArray[6]
-    ) {
-      return true;
-    }
-    if (
-      marker === boardArray[1] &&
-      boardArray[1] === boardArray[4] &&
-      boardArray[4] === boardArray[7]
-    ) {
-      return true;
-    }
-    if (
-      marker === boardArray[0] &&
-      boardArray[0] === boardArray[4] &&
-      boardArray[4] === boardArray[8]
-    ) {
-      return true;
-    }
-    if (
-      marker === boardArray[2] &&
-      boardArray[2] === boardArray[4] &&
-      boardArray[4] === boardArray[6]
-    ) {
-      return true;
-    }
-    if (
-      marker === boardArray[6] &&
-      boardArray[6] === boardArray[7] &&
-      boardArray[7] === boardArray[8]
-    ) {
-      return true;
-    }
-    false;
+    return gameBoard.computeRowMatch(marker)? true :
+           gameBoard.computeColMatch(marker)? true :
+           gameBoard.computeDiagonalMatch(marker) ? true : false;
   }
 
   function _isGameTie() {
@@ -134,12 +79,12 @@ const gameController = (function () {
     isWinnerFound = false;
   }
 
-  function _initGameEnd(player){
+  async function _initGameEnd(player){
     let text = '';
     if (isWinnerFound) {
       if(isComputerOpponent){
         if(player === player2){
-          text = `${player.name} Don't Cry`;
+          text = `${player1.name} Don't Cry`;
         }else{
           text = `${player1.name} You Are Genious`;
         }
@@ -149,11 +94,12 @@ const gameController = (function () {
     } else if(!isWinnerFound){
       text = `it's totally scratch`;
     }
-    _resetGameParams();
-    gameBoard.emptyBoardArray();
     displayController.clearBoard();
+    await displayController.highlightWinningCoord();
     displayController.switchToEndScreen();
     displayController.displayGameEndMessage(text);
+    gameBoard.reset();
+    _resetGameParams();
   }
 
   function _executePlay(player, cellIndex) {

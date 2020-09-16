@@ -1,8 +1,6 @@
-// import {displayController}  from "./display.js";
-
 const gameBoard = (function(doc){
   const boardArray = Array(9).fill(null);
-
+  let  winColIndices = [];
   const _boardElement = doc.querySelector(".play-screen__board");
 
   const get = () => _boardElement;
@@ -11,8 +9,14 @@ const gameBoard = (function(doc){
 
   const _isEmpty = (cell) => (cell === null ? true : false);
 
-  function emptyBoardArray(){
-    boardArray.fill(null);
+
+  function _setWinColIndices(i1,i2,i3){
+     winColIndices = [];
+     winColIndices.push(i1,i2,i3);
+  }
+
+  function getWinColIndices(){
+    return winColIndices;
   }
 
   function updateCell(index, marker) {
@@ -24,11 +28,93 @@ const gameBoard = (function(doc){
     return false;
   }
 
+  function computeRowMatch(marker){
+    if (
+      marker === boardArray[0] &&
+      boardArray[0] === boardArray[1] &&
+      boardArray[1] === boardArray[2]
+    ) {
+      _setWinColIndices(0,1,2);
+      return true;
+    }
+    if (
+      marker === boardArray[3] &&
+      boardArray[3] === boardArray[4] &&
+      boardArray[4] === boardArray[5]
+    ) {
+      _setWinColIndices(3,4,5);
+      return true;
+    }
+    if (
+      marker === boardArray[6] &&
+      boardArray[6] === boardArray[7] &&
+      boardArray[7] === boardArray[8]
+    ) {
+      _setWinColIndices(6,7,8);
+      return true;
+    }
+  }
+
+  function computeColMatch(marker){
+    if (
+      marker === boardArray[0] &&
+      boardArray[0] === boardArray[3] &&
+      boardArray[3] === boardArray[6]
+    ) {
+      _setWinColIndices(0,3,6);
+      return true;
+    }
+    if (
+      marker === boardArray[1] &&
+      boardArray[1] === boardArray[4] &&
+      boardArray[4] === boardArray[7]
+    ) {
+      _setWinColIndices(1,4,7);
+      return true;
+    }
+    if (
+      marker === boardArray[2] &&
+      boardArray[2] === boardArray[5] &&
+      boardArray[5] === boardArray[8]
+    ) {
+      _setWinColIndices(2,5,8);
+      return true;
+    }
+  }
+
+  function computeDiagonalMatch(marker){
+    if (
+      marker === boardArray[2] &&
+      boardArray[2] === boardArray[4] &&
+      boardArray[4] === boardArray[6]
+    ) {
+      _setWinColIndices(2,4,6);
+      return true;
+    }
+    if (
+      marker === boardArray[0] &&
+      boardArray[0] === boardArray[4] &&
+      boardArray[4] === boardArray[8]
+    ) {
+      _setWinColIndices(0,4,8);
+      return true;
+    }
+  }
+
+  function reset(){
+    boardArray.fill(null);
+    winColIndices = [];
+  }
+
   return {
       get,
       getBoardArray,
-      emptyBoardArray,
-      updateCell
+      getWinColIndices,
+      reset,
+      updateCell,
+      computeRowMatch,
+      computeColMatch,
+      computeDiagonalMatch,
   }
 })(document);
 

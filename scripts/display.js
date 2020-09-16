@@ -57,6 +57,10 @@ const displayController = (function (doc) {
     backBtn.addEventListener("click", _handleScreenBtnClick.bind(backBtn), false);
   }
 
+  function _sleep(milliseconds){
+    return new Promise(resolve => setTimeout(resolve,milliseconds));
+  }
+
   function _typeWriter(textArray, targetElement){
     let display = targetElement;
     textArray.forEach((frame, index) => {
@@ -67,9 +71,9 @@ const displayController = (function (doc) {
       timeoutIdsBucket.push(setTimeout(() => {
         display.textContent = '';
       },add));
-
+      
+      display.textContent = '';
       line.forEach((character) => {
-        console.log(character,display);
         let milliseconds = Math.floor(Math.random() * 125);
         timeoutIdsBucket.push(setTimeout(() => {
           display.textContent += character;
@@ -191,6 +195,7 @@ const displayController = (function (doc) {
     const boardCells = doc.querySelectorAll(".play-screen__board-cell");
 
     for (let i = 0; i < boardCells.length; i++) {
+      boardCells[i].classList.remove('text--glow','col--blink');
       boardCells[i].textContent = "\u00A0";
     }
   }
@@ -201,9 +206,25 @@ const displayController = (function (doc) {
 
     for (let i = 0; i < boardArray.length; i++) {
       if (boardArray[i] !== null) {
+        boardCells[i].classList.add("col--blink");
         boardCells[i].textContent = boardArray[i];
       }
     }
+  }
+
+  async function highlightWinningCoord(){
+    const boardArray = gameBoard.getBoardArray();
+    const boardCells = doc.querySelectorAll(".play-screen__board-cell");
+    const winColIndices = gameBoard.getWinColIndices();
+
+    winColIndices.forEach((i)=>{
+        boardCells[i].classList.add('text--glow');
+        boardCells[i].textContent = boardArray[i];
+    })
+
+    await _sleep(2000);
+    clearBoard();
+    await _sleep(500);
   }
 
   function getGameSettings() {
@@ -229,8 +250,9 @@ const displayController = (function (doc) {
 
   return {
     displayGameEndMessage,
-    getGameSettings,
     switchToEndScreen,
+    highlightWinningCoord,
+    getGameSettings,
     clearBoard,
     render,
   };
