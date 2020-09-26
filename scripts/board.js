@@ -19,6 +19,15 @@ const gameBoard = (function(doc){
     return winColIndices;
   }
 
+  function getEmptyCells(){
+    const emptyCellsIndex = [];
+    boardArray.forEach((cell,index)=>{
+      if(_isEmpty(cell))
+        emptyCellsIndex.push(index);
+    })
+    return emptyCellsIndex;
+  }
+
   function updateCell(index, marker) {
     const cell = boardArray[index];
     if (_isEmpty(cell)) {
@@ -109,6 +118,7 @@ const gameBoard = (function(doc){
   return {
       get,
       getBoardArray,
+      getEmptyCells,
       getWinColIndices,
       reset,
       updateCell,

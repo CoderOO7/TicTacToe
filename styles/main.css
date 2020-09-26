@@ -177,6 +177,10 @@ body{
     cursor: pointer;
 }
 
+.begin-screen__btn--login:hover{
+    transform: scale(1.3);
+}
+
 .play-screen{
     display: flex;
     height: 100vh;
@@ -224,7 +228,6 @@ body{
 .play-screen__board-cell[data-cell-number='9']{
     border-bottom: none;
 }
-
 
 .text--glow{
     animation: glow 2s ease-in-out alternate;

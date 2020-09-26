@@ -40,20 +40,18 @@ const gameController = (function () {
     }
   }
 
-  
   function _getComputerMove(){
-    const boardArray = gameBoard.getBoardArray();
-    return Math.floor(Math.random()* boardArray.length);
+    const emptyCellsArr = gameBoard.getEmptyCells();
+    return emptyCellsArr[Math.floor(Math.random()* emptyCellsArr.length)];
   }
   
-  const _isComputerMoveValid = (index) => gameBoard.getBoardArray()[index] === null;   
-
-  function _computerTurn(){
+  const _isComputerMoveValid = (index) => gameBoard.getBoardArray()[index] === null;  
+  
+  function _executeComputerPlay(){
     const cellIndex = _getComputerMove();
-    if(_isComputerMoveValid(cellIndex)){
-      return _executePlay(player2,cellIndex);
-    }else{
-      _computerTurn();
+    const isCellUpdated = gameBoard.updateCell(cellIndex, player2.marker);
+   if(_isComputerMoveValid && isCellUpdated){
+      displayController.render();
     }
   }
 
@@ -107,12 +105,13 @@ const gameController = (function () {
 
     if (isCellUpdated) {
       displayController.render();
-      _changePlayerTurn();
       if (_isGameOver(player.marker)) {
         _initGameEnd(player);        
-      }else if(isComputerOpponent === true && _getPlayerTurn() === player2){
-        _computerTurn();
-      } 
+      }else if(isComputerOpponent){
+        _executeComputerPlay();
+      }else if(!isComputerOpponent){
+        _changePlayerTurn();
+      }
     }
   }
 
