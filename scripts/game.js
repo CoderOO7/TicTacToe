@@ -44,14 +44,22 @@ const gameController = (function () {
     const emptyCellsArr = gameBoard.getEmptyCells();
     return emptyCellsArr[Math.floor(Math.random()* emptyCellsArr.length)];
   }
+
+  function _getComputerBestMove(board,){
+    const emptyCellsArr = gameBoard.getEmptyCells();
+    return emptyCellsArr[Math.floor(Math.random()* emptyCellsArr.length)];
+  }
   
   const _isComputerMoveValid = (index) => gameBoard.getBoardArray()[index] === null;  
   
   function _executeComputerPlay(){
     const cellIndex = _getComputerMove();
     const isCellUpdated = gameBoard.updateCell(cellIndex, player2.marker);
-   if(_isComputerMoveValid && isCellUpdated){
+   if(_isComputerMoveValid() && isCellUpdated){
       displayController.render();
+      if(_isGameOver(player2.marker)){
+        _initGameEnd(player2);
+      }
     }
   }
 
