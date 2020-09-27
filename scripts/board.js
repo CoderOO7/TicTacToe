@@ -1,5 +1,6 @@
 const gameBoard = (function(doc){
   const boardArray = Array(9).fill(null);
+  //const boardArray = [null,'X',null,'O',null,'X','O','O',null];
   let  winColIndices = [];
   const _boardElement = doc.querySelector(".play-screen__board");
 

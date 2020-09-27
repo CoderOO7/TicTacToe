@@ -40,22 +40,76 @@ const gameController = (function () {
     }
   }
 
-  function _getComputerMove(){
-    const emptyCellsArr = gameBoard.getEmptyCells();
-    return emptyCellsArr[Math.floor(Math.random()* emptyCellsArr.length)];
+  function _getComputerFirstOptimizedMove(){
+    const boardArray = gameBoard.getBoardArray();
+    if(boardArray[4] === null) return 4;
+    else return 0;
   }
 
-  function _getComputerBestMove(board,){
-    const emptyCellsArr = gameBoard.getEmptyCells();
-    return emptyCellsArr[Math.floor(Math.random()* emptyCellsArr.length)];
+  function _getComputerBestMove(board,depth=0,isMaximizing=true){
+    if(_isPlayerWin('O')){
+      return 100 - depth;
+    }else if(_isPlayerWin('X')){
+      return -100 + depth;
+    }else if(_isGameTie()){
+      return 0;
+    }
+
+    let moves = [];
+    if(isMaximizing){
+      let bestMoveScore = -100;
+      let move={};
+      board.getEmptyCells().forEach(index=>{
+        board.getBoardArray()[index] = 'O';
+        let moveScore = _getComputerBestMove(board,depth+1,false);
+        board.getBoardArray()[index] = null;
+        bestMoveScore = Math.max(bestMoveScore,moveScore);
+        if(depth === 0){
+          move = {moveScore,index};
+          moves.push(move);
+        }
+      })
+      if(depth === 0){
+        for(let i=0; i<moves.length; i++){
+          if(moves[i].moveScore === bestMoveScore){
+            return moves[i].index;
+          } 
+        }
+      }
+      return bestMoveScore;
+    }else if(!isMaximizing){
+      let bestMoveScore = 100;
+      let move = {};
+      board.getEmptyCells().forEach(index=>{
+        board.getBoardArray()[index] = 'X';
+        let moveScore = _getComputerBestMove(board,depth+1,true);
+        board.getBoardArray()[index] = null;
+        bestMoveScore = Math.min(bestMoveScore,moveScore);
+        if(depth === 0){
+          move = {moveScore,index};
+        }
+      })
+      if(depth === 0){
+        console.log(moves);
+        for(let i=0; i<moves.length; i++){
+          if(moves[i].moveScore === bestMoveScore){
+            return moves[i].index;
+          } 
+        }
+        
+      }
+      return bestMoveScore;
+    }
   }
-  
-  const _isComputerMoveValid = (index) => gameBoard.getBoardArray()[index] === null;  
-  
+    
   function _executeComputerPlay(){
-    const cellIndex = _getComputerMove();
+    const cellIndex = gameBoard.getEmptyCells().length === 8 ? 
+                      _getComputerFirstOptimizedMove() :
+                      _getComputerBestMove(gameBoard,0,true);
+
     const isCellUpdated = gameBoard.updateCell(cellIndex, player2.marker);
-   if(_isComputerMoveValid() && isCellUpdated){
+  
+    if(isCellUpdated){
       displayController.render();
       if(_isGameOver(player2.marker)){
         _initGameEnd(player2);
@@ -116,7 +170,7 @@ const gameController = (function () {
       if (_isGameOver(player.marker)) {
         _initGameEnd(player);        
       }else if(isComputerOpponent){
-        _executeComputerPlay();
+        setTimeout(_executeComputerPlay,100);
       }else if(!isComputerOpponent){
         _changePlayerTurn();
       }
