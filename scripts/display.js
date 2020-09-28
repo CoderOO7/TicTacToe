@@ -218,8 +218,10 @@ const displayController = (function (doc) {
     const winColIndices = gameBoard.getWinColIndices();
 
     winColIndices.forEach((i)=>{
+      if(i !== null){
         boardCells[i].classList.add('text--glow');
         boardCells[i].textContent = boardArray[i];
+      }
     })
 
     await _sleep(2000);

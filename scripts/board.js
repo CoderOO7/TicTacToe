@@ -1,7 +1,6 @@
 const gameBoard = (function(doc){
   const boardArray = Array(9).fill(null);
-  //const boardArray = [null,'X',null,'O',null,'X','O','O',null];
-  let  winColIndices = [];
+  let  winColIndices = Array(3).fill(null);
   const _boardElement = doc.querySelector(".play-screen__board");
 
   const get = () => _boardElement;
@@ -12,7 +11,7 @@ const gameBoard = (function(doc){
 
 
   function _setWinColIndices(i1,i2,i3){
-     winColIndices = [];
+     winColIndices = [null,null,null];
      winColIndices.push(i1,i2,i3);
   }
 
@@ -47,7 +46,7 @@ const gameBoard = (function(doc){
       _setWinColIndices(0,1,2);
       return true;
     }
-    if (
+    else if (
       marker === boardArray[3] &&
       boardArray[3] === boardArray[4] &&
       boardArray[4] === boardArray[5]
@@ -55,13 +54,15 @@ const gameBoard = (function(doc){
       _setWinColIndices(3,4,5);
       return true;
     }
-    if (
+    else if (
       marker === boardArray[6] &&
       boardArray[6] === boardArray[7] &&
       boardArray[7] === boardArray[8]
     ) {
       _setWinColIndices(6,7,8);
       return true;
+    }else{
+      _setWinColIndices(null,null,null); 
     }
   }
 
@@ -74,7 +75,7 @@ const gameBoard = (function(doc){
       _setWinColIndices(0,3,6);
       return true;
     }
-    if (
+    else if (
       marker === boardArray[1] &&
       boardArray[1] === boardArray[4] &&
       boardArray[4] === boardArray[7]
@@ -82,13 +83,16 @@ const gameBoard = (function(doc){
       _setWinColIndices(1,4,7);
       return true;
     }
-    if (
+    else if (
       marker === boardArray[2] &&
       boardArray[2] === boardArray[5] &&
       boardArray[5] === boardArray[8]
     ) {
       _setWinColIndices(2,5,8);
       return true;
+    }
+    else{
+      _setWinColIndices(null,null,null);
     }
   }
 
@@ -101,13 +105,16 @@ const gameBoard = (function(doc){
       _setWinColIndices(2,4,6);
       return true;
     }
-    if (
+    else if (
       marker === boardArray[0] &&
       boardArray[0] === boardArray[4] &&
       boardArray[4] === boardArray[8]
     ) {
       _setWinColIndices(0,4,8);
       return true;
+    }
+    else{
+      _setWinColIndices(null,null,null)
     }
   }
 
