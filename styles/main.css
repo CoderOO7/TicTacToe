@@ -4,6 +4,7 @@
     /* --main-color: rgba(222,184,135,0.5); */
     --main-color:  #00ff00;
     --green: #00ff00;
+    --pale-green: #2d6605;
     --dark-green: #2c5f2d;
 }
 
@@ -91,6 +92,12 @@ body{
     border-radius: 5vh 5vh 10vh 10vh;
 }
 
+.home-screen__btn:hover,
+.end-screen__btn:hover{
+    color: black;
+    background-color: var(--pale-green);
+}
+
 .begin-screen__msg,
 .end-screen__msg{
     text-shadow: .1em 0.1em 2vh var(--main-color)
@@ -161,6 +168,20 @@ body{
     align-self: center;
     text-shadow: 0 0 2vh var(--main-color);
     border-radius: 90vh 90vh 5vh 5vh;
+}
+
+.begin-screen__btn--back .__btn--back-text{
+    display: none;
+}
+
+.begin-screen__btn--back:hover{
+    transform: scale(1.3);
+    text-shadow: 0 0 3vh blanchedalmond;
+}
+
+.begin-screen__btn--back:hover .__btn--back-text{
+    font-size: 0.8em;
+    display: inline;
 }
 
 .begin-screen__btn--login{
