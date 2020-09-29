@@ -150,6 +150,7 @@ const displayController = (function (doc) {
     }
   }
 
+
   function _showMatrixRain() {
     // Initialising the canvas
     let canvas = document.querySelector(".canvas");
@@ -187,6 +188,21 @@ const displayController = (function (doc) {
         }
       }
     }
+
+    function resizeCanvas(canvas,ctx){
+      if(canvas && ctx){
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+    }
+
+    window.addEventListener('resize', ()=>{resizeCanvas(canvas,ctx)},false);
+
+    window.addEventListener('orientationchange',()=>{resizeCanvas(canvas,ctx)},false);
+    
     // Loop the animation
     setInterval(draw, 60);
   }
