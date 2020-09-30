@@ -1,7 +1,5 @@
 :root{
     --light-black: #2f2f2f;
-    --body-bg-color: #2f2f2f;
-    /* --main-color: rgba(222,184,135,0.5); */
     --main-color:  #00ff00;
     --green: #00ff00;
     --pale-green: #2d6605;
@@ -31,15 +29,7 @@ body{
     cursor: pointer;
 }
 
-.container{
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    left:50%;
-    transform: translate(-50%,0);
-    color: var(--main-color);
-}
-
+.container,
 .home-screen,
 .begin-screen,
 .play-screen,
@@ -48,25 +38,37 @@ body{
     flex-direction: column;
 }
 
+.container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100vh;
+    width: 100vh;
+    margin: -50vh 0 0 -50vh;
+    overflow: hidden; /*hide scrollbars to prevent layout break issue on mobile screen*/
+    color: var(--main-color);
+    background: rgba(0,0,0,0.2);
+}
+
 .home-screen,
 .begin-screen,
 .end-screen{
     position: absolute;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%,0);
-    border-radius: 50%;
     height: 90vh;
     width: 90vh;
-    align-self: center;
-    margin: 5vh 0;
+    margin: -45vh 0 0 -45vh;
+    border-radius: 50%;
     border: 0.6vh solid var(--main-color,#000);
 }
+
 
 .home-screen__logo{
     position: absolute;
     top: 16%;
     left: 0;
-    margin: 0 auto;
+    margin:0 auto;
     font-size: 10.5vh;
     width: 100%;
     text-align:center;
@@ -284,11 +286,13 @@ body{
 }
 
 @media screen and (orientation: portrait){
+    .container,
     .home-screen,
     .begin-screen,
     .end-screen{
         height: 90vw;
         width: 90vw;
+        margin: -45vw 0 0 -45vw;
     }
 
     .home-screen__logo{
