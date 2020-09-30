@@ -15,7 +15,7 @@ An online TicTacToe(Noughts and Crosses) game with matrix look to give you some 
 - Apart from that able to improve my CSS skills by designing its UI.   
 
 ## Acknowledgment
-- This project is part of TheOdinProject curriculum.
+This project is part of TheOdinProject curriculum.
 
 ## TLDR
 
