@@ -1,4 +1,3 @@
-import { gameController } from "./game.js";
 import { gameBoard } from "./board.js";
 
 const displayController = (function (doc) {
@@ -23,6 +22,10 @@ const displayController = (function (doc) {
   let GAME_MODE = null;
   let timeoutIdsBucket = [];
 
+  /**
+   * Init the action to be performed for specific button
+   * click. 
+   */
   function _handleScreenBtnClick() {
     if (this === singlePlayerBtn || this === multiPlayerBtn) {
       _setGameMode.call(this);
@@ -48,6 +51,9 @@ const displayController = (function (doc) {
     }
   }
 
+  /**
+   * Add click event listeners to Screen Buttons. 
+   */
   function _activateButtons() {
     singlePlayerBtn.addEventListener("click", _handleScreenBtnClick.bind(singlePlayerBtn), false);
     multiPlayerBtn.addEventListener("click", _handleScreenBtnClick.bind(multiPlayerBtn), false);
@@ -57,10 +63,21 @@ const displayController = (function (doc) {
     backBtn.addEventListener("click", _handleScreenBtnClick.bind(backBtn), false);
   }
 
+  /**
+   * Use to add a pause for the specified time in milliseconds 
+   * @param {Number} milliseconds - amount of time to pause.
+   * @return {Promise.<String>} - when specified time completed.
+   */
   function _sleep(milliseconds){
     return new Promise(resolve => setTimeout(resolve,milliseconds));
   }
 
+  /**
+   * Create automatic typing effect on message display of screens.
+   * @param {Array} textArray - contain message in form of array of strings
+   * that should be display.
+   * @param {Object} targetElement - document node to which message is render  
+   */
   function _typeWriter(textArray, targetElement){
     let display = targetElement;
     textArray.forEach((frame, index) => {
@@ -83,6 +100,9 @@ const displayController = (function (doc) {
     })
   }
 
+  /**
+   * To greet the user, show the message based on the game mode selection.
+   */
   function _displayWelcomeMessage(){
     if(_getGameMode() === 'single_player'){
       let text = [
@@ -106,27 +126,45 @@ const displayController = (function (doc) {
     }
   }
 
+  /**
+   * Cancel all timout events based on the id pushed in timeoutIdsBucket
+   * when setTimeOut() function is called.  
+   */
   function _clearTimeout(){
     return timeoutIdsBucket.forEach(id=>{clearTimeout(id);});
   }
   
+  /**
+   * Hide all the screens excpt HomeScreen 
+   */
   function _hideScreenAtStartup() {
     beginScreen.classList.add("screen--hide");
     playScreen.classList.add("screen--hide");
     endScreen.classList.add("screen--hide");
   }
 
+  /**
+   * Assign the gameSetting object based on input values and 
+   * gameMode Selection.
+   */
   function _initGameSettings() {
     gameSettings.gameMode = _getGameMode();
     gameSettings.player1Name = player1NameInput.value.toUpperCase();
     gameSettings.player2Name = player2NameInput.value.toUpperCase();
   }
 
+  /**
+   * In case player don't enter their name, then these alias values
+   * will be used.
+   */
   function _setPlayersNameAlias() {
     player1NameInput.value = player1NameInput.placeholder.toUpperCase();
     player2NameInput.value = player2NameInput.placeholder.toUpperCase();
   }
 
+  /**
+   * Init GAME_MODE global variable with selected mode by user. 
+   */
   function _setGameMode() {
     if (this === singlePlayerBtn) {
       GAME_MODE = "single_player";
@@ -135,10 +173,16 @@ const displayController = (function (doc) {
     }
   }
 
+  /**
+   * Return the gameMode.  
+   */
   function _getGameMode() {
     return GAME_MODE;
   }
 
+  /**
+   * Style the input display at BeginScreen.
+   */
   function _styleInputDisplay() {
     if (_getGameMode() === "single_player") {
       player1NameInput.style.top = "40%";
@@ -150,7 +194,9 @@ const displayController = (function (doc) {
     }
   }
 
-
+  /**
+   * Used to create matrix background for app.  
+   */
   function _showMatrixRain() {
     // Initialising the canvas
     let canvas = document.querySelector(".canvas");
@@ -175,7 +221,7 @@ const displayController = (function (doc) {
     }
 
     // Setting up the draw function
-    function draw() {
+    function _draw() {
       ctx.fillStyle = "rgba(0, 0, 0, .1)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       for (var i = 0; i < drops.length; i++) {
@@ -189,7 +235,8 @@ const displayController = (function (doc) {
       }
     }
 
-    function resizeCanvas(canvas,ctx){
+    // To prevent layout break when browser window size or mobile orientation changes.
+    function _resizeCanvas(canvas,ctx){
       if(canvas && ctx){
         canvas.style.width = window.innerWidth + 'px';
         canvas.style.height = window.innerHeight + 'px';
@@ -199,14 +246,18 @@ const displayController = (function (doc) {
       }
     }
 
-    window.addEventListener('resize', ()=>{resizeCanvas(canvas,ctx)},false);
-
-    window.addEventListener('orientationchange',()=>{resizeCanvas(canvas,ctx)},false);
+    //Event listener fire event on change in browser window size.
+    window.addEventListener('resize', ()=>{_resizeCanvas(canvas,ctx)},false);
+    //Event listener fire event on change in mobile orientation. 
+    window.addEventListener('orientationchange',()=>{_resizeCanvas(canvas,ctx)},false);
     
     // Loop the animation
-    setInterval(draw, 60);
+    setInterval(_draw, 60);
   }
 
+  /**
+   * Reset the game board by filling blank spaces in cells.
+   */
   function clearBoard() {
     const boardCells = doc.querySelectorAll(".play-screen__board-cell");
 
@@ -216,6 +267,10 @@ const displayController = (function (doc) {
     }
   }
 
+  /**
+   * Render the game-board cells with either 'O' or 'X' using the index 
+   * value of gameBoard array.
+   */
   function render() {
     const boardArray = gameBoard.getBoardArray();
     const boardCells = doc.querySelectorAll(".play-screen__board-cell");
@@ -228,6 +283,10 @@ const displayController = (function (doc) {
     }
   }
 
+  /** 
+   * Highlight the particular row, coloumn or diagonal that satisfy winning 
+   * condition.
+   */
   async function highlightWinningCoord(){
     const boardArray = gameBoard.getBoardArray();
     const boardCells = doc.querySelectorAll(".play-screen__board-cell");
@@ -245,15 +304,24 @@ const displayController = (function (doc) {
     await _sleep(500);
   }
 
+  /**
+   * Return the current gameSettings. 
+   */
   function getGameSettings() {
     return gameSettings;
   }
 
+  /**
+   * Used to display endScreen when game is over. 
+   */
   function switchToEndScreen() {
     playScreen.classList.add("screen--hide");
     endScreen.classList.remove("screen--hide");
   }
 
+  /**
+   * Render the text to endScreen message display. 
+   */
   function displayGameEndMessage(text){
     let textArr = [text];
     _typeWriter(textArr, endScreenMsgDisplay);

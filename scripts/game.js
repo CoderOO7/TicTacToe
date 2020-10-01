@@ -1,6 +1,7 @@
 import { gameBoard } from "./board.js";
 import { displayController } from "./display.js";
 
+
 const playerFactory = (name, marker, isMyTurn) => {
   return { name, marker, isMyTurn };
 };
@@ -13,6 +14,9 @@ const gameController = (function () {
   let isComputerOpponent = false;
   let isWinnerFound = false;
 
+  /**
+   * Init the Players detail and their marker.
+   */
   function _initPlayers() {
     const gameSettings = displayController.getGameSettings();
     player1 = playerFactory(gameSettings.player1Name, "X", true);
@@ -20,16 +24,23 @@ const gameController = (function () {
     isComputerOpponent = gameSettings.gameMode === 'single_player' ? true: false;
   }
 
+  /**
+   * Return true if its current player turn, else false
+   * @param {Object} player - current player
+   * @return {Boolean}
+   */
   const _isPlayerTurn = (player) => player.isMyTurn;
 
+  /**
+   * Return the current player
+   */
   function _getPlayerTurn() {
     return _isPlayerTurn(player1) ? player1 : player2;
   }
 
-  function _disableBoardClick() {
-    boardElement.removeEventListener("click", _handleBoardClick, false);
-  }
-
+  /**
+   * Switch player turn based on previous played player. 
+   */
   function _changePlayerTurn() {
     if (player1.isMyTurn) {
       player1.isMyTurn = false;
@@ -40,13 +51,27 @@ const gameController = (function () {
     }
   }
 
+  /**
+   * Used to optimize the time taken by minimax algo to do calculation,
+   * by manually calculating first move of computer.
+   * @return {Number} - The cell index value that is used for computer move. 
+   */
   function _getComputerFirstOptimizedMove(){
     const boardArray = gameBoard.getBoardArray();
     if(boardArray[4] === null) return 4;
     else return 0;
   }
 
+  /**
+   * It implement the minimax algo and return the best move on the basis
+   * of board State.
+   * @param {Object} board - The gameboard
+   * @param {Number} depth - The current level in recuresive tree
+   * @param {Boolean} isMaximizing -  true if player is computer, else false 
+   * @return {Number} choosen cell index value.
+   */
   function _getComputerBestMove(board,depth=0,isMaximizing=true){
+    // base condition
     if(_isPlayerWin('O')){
       return 100 - depth;
     }else if(_isPlayerWin('X')){
@@ -56,9 +81,10 @@ const gameController = (function () {
     }
 
     let moves = [];
-    if(isMaximizing){
+    if(isMaximizing){ // If player is computer.
       let bestMoveScore = -100;
       let move={};
+      
       board.getEmptyCells().forEach(index=>{
         board.getBoardArray()[index] = 'O';
         let moveScore = _getComputerBestMove(board,depth+1,false);
@@ -69,6 +95,7 @@ const gameController = (function () {
           moves.push(move);
         }
       })
+      
       if(depth === 0){
         for(let i=0; i<moves.length; i++){
           if(moves[i].moveScore === bestMoveScore){
@@ -77,9 +104,11 @@ const gameController = (function () {
         }
       }
       return bestMoveScore;
-    }else if(!isMaximizing){
+
+    }else if(!isMaximizing){ // If player is not computer.
       let bestMoveScore = 100;
       let move = {};
+      
       board.getEmptyCells().forEach(index=>{
         board.getBoardArray()[index] = 'X';
         let moveScore = _getComputerBestMove(board,depth+1,true);
@@ -89,8 +118,8 @@ const gameController = (function () {
           move = {moveScore,index};
         }
       })
+
       if(depth === 0){
-        console.log(moves);
         for(let i=0; i<moves.length; i++){
           if(moves[i].moveScore === bestMoveScore){
             return moves[i].index;
@@ -101,7 +130,10 @@ const gameController = (function () {
       return bestMoveScore;
     }
   }
-    
+   
+  /**
+   * Update the gameBoard after computer played its move. 
+   */
   function _executeComputerPlay(){
     const cellIndex = gameBoard.getEmptyCells().length === 8 ? 
                       _getComputerFirstOptimizedMove() :
@@ -117,21 +149,34 @@ const gameController = (function () {
     }
   }
 
+  /**
+   * Return true if active player win ,else false.
+   */
   function _isPlayerWin(marker) {
     return gameBoard.computeRowMatch(marker)? true :
            gameBoard.computeColMatch(marker)? true :
            gameBoard.computeDiagonalMatch(marker) ? true : false;
   }
 
+
+  /**
+   * Return true if game tie ,else false.
+   */
   function _isGameTie() {
     const boardArray = gameBoard.getBoardArray();
     return boardArray.every((cell) => cell !== null);
   }
 
+  /**
+   * Return true if game is over, else false.
+   */
   function _isGameOver(marker) {
     return _isPlayerWin(marker) ? isWinnerFound = true : _isGameTie();
   }
 
+  /**
+   * Return true if active player win ,else false.
+   */
   function _resetGameParams(){
     player1 = null;
     player2 = null;
@@ -139,6 +184,9 @@ const gameController = (function () {
     isWinnerFound = false;
   }
 
+  /**
+   * Reset the game paramters and other rendering when game is over.
+   */
   async function _initGameEnd(player){
     let text = '';
     if (isWinnerFound) {
@@ -162,6 +210,9 @@ const gameController = (function () {
     _resetGameParams();
   }
 
+  /**
+   * Update the gameBoard after player played its move. 
+   */
   function _executePlay(player, cellIndex) {
     const isCellUpdated = gameBoard.updateCell(cellIndex, player.marker);
 
@@ -177,6 +228,9 @@ const gameController = (function () {
     }
   }
 
+  /**
+   * Return true if player1 and player2 are intialized,else false. 
+   */
   function _isGameSettingAvailable() {
     if (player1 && player2) {
       return true;
@@ -186,6 +240,10 @@ const gameController = (function () {
     }
   }
 
+  /**
+   * Click Event Handler for boardElement
+   * @param {Object} event - The `click` event object 
+   */
   function _handleBoardClick(event) {
     if (!_isGameSettingAvailable()) return;
     const cellClicked = event.target.closest(".play-screen__board-cell");
