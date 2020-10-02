@@ -3,22 +3,29 @@ const gameBoard = (function(doc){
   let  winColIndices = Array(3).fill(null);
   const _boardElement = doc.querySelector(".play-screen__board");
 
+  /** @return {object}*/
   const get = () => _boardElement;
 
+  /** @return {object}*/
   const getBoardArray = () => boardArray;
 
+  /** @return {boolean}*/
   const _isEmpty = (cell) => (cell === null ? true : false);
 
-
+  /**
+   * Store index value of column/row/diagonal that match winning condition.
+   */
   function _setWinColIndices(i1,i2,i3){
      winColIndices = [null,null,null];
      winColIndices.push(i1,i2,i3);
   }
 
+  /** @return {object}*/
   function getWinColIndices(){
     return winColIndices;
   }
 
+  /** @return {object}*/
   function getEmptyCells(){
     const emptyCellsIndex = [];
     boardArray.forEach((cell,index)=>{
@@ -28,6 +35,7 @@ const gameBoard = (function(doc){
     return emptyCellsIndex;
   }
 
+  /** @return {boolean}*/
   function updateCell(index, marker) {
     const cell = boardArray[index];
     if (_isEmpty(cell)) {
@@ -37,6 +45,12 @@ const gameBoard = (function(doc){
     return false;
   }
 
+  /**
+   * Check for each row of board, return true if in any row all cells 
+   * have same marker value, else false.
+   * @param {object} marker - Either 'X' or 'O'
+   * @return {boolean} 
+   */
   function computeRowMatch(marker){
     if (
       marker === boardArray[0] &&
@@ -66,6 +80,12 @@ const gameBoard = (function(doc){
     }
   }
 
+   /**
+   * Check for each column of board, return true if in any column all cells 
+   * have same marker value, else false.
+   * @param {object} marker - Either 'X' or 'O'
+   * @return {boolean} 
+   */
   function computeColMatch(marker){
     if (
       marker === boardArray[0] &&
@@ -96,6 +116,12 @@ const gameBoard = (function(doc){
     }
   }
 
+   /**
+   * Check diagonals of board, return true if diagonal cells
+   * have same marker value, else false.
+   * @param {object} marker - Either 'X' or 'O'
+   * @return {boolean} 
+   */
   function computeDiagonalMatch(marker){
     if (
       marker === boardArray[2] &&
@@ -118,6 +144,9 @@ const gameBoard = (function(doc){
     }
   }
 
+  /**
+   * Init global variables with default value. 
+   */
   function reset(){
     boardArray.fill(null);
     winColIndices = [];
