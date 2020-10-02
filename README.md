@@ -2,6 +2,10 @@
 
 An online TicTacToe(Noughts and Crosses) game with matrix look to give you some nerd feel, built using HTML5, CSS3, and JavaScript ES6.
 
+![Live Demo](assets/tictactoe.gif)
+
+Recorded using [CaptureToGif](https://chrome.google.com/webstore/detail/capture-to-a-gif/eapecadlmfblmnfnojebefkbginhggeh).
+
 ## Features
 - Two game mode are available <br>
   - **Single:** Human play against AI. <br>
